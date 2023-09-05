@@ -1,0 +1,195 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/Account",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Account"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Customer",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Customer"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Customer/{CustomerId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Customer/{CustomerId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Product",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Product",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Administrator"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Product/{ProductId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Product/{ProductId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Order",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Order",
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "60s",
+        "PeriodTimespan": 60,
+        "Limit": 1
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Order/{OrderId}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Order/{OrderId}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8000",
+    "RateLimitOptions": {
+      "QuotaExceededMessage": "Request not allowed",
+      "HttpStatusCode": 909
+    }
+  }
+}
+
+
+
+
+
+
+//{
+//  "Routes": [
+//    {
+//      "UpstreamPathTemplate": "/api/Customer",
+//      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Customer"
+//    },
+//    {
+//      "UpstreamPathTemplate": "/api/Customer/{CustomerId}",
+//      "UpstreamHttpMethod": [ "Get", "Delete" ],
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Customer/{CustomerId}"
+//    },
+//    {
+//      "UpstreamPathTemplate": "/api/Product",
+//      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Product"
+//    },
+//    {
+//      "UpstreamPathTemplate": "/api/Product/{ProductId}",
+//      "UpstreamHttpMethod": [ "Get", "Delete" ],
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Product/{ProductId}"
+//    },
+//    {
+//      "UpstreamPathTemplate": "/api/Order",
+//      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Order"
+//    },
+//    {
+//      "UpstreamPathTemplate": "/api/Order/{OrderId}",
+//      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 80
+//        }
+//      ],
+//      "DownstreamPathTemplate": "/api/Order/{OrderId}",
+//    }
+//  ],
+//  "GlobalConfiguration": {
+//    "BaseUrl": "http://localhost:800"
+//  }
+//}

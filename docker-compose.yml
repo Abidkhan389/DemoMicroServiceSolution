@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  customerwebapi:
+    image: ${DOCKER_REGISTRY-}customerwebapi
+    build:
+      context: .
+      dockerfile: CustomerWebApi\Dockerfile
+
+  product-api:
+    image: ${DOCKER_REGISTRY-}productapi
+    build:
+      context: .
+      dockerfile: Product\Product-API\Dockerfile
+

@@ -1,5 +1,7 @@
-﻿using CustomerWebApi.Contracts.Persistence.ICustomer;
+﻿using CustomerWebApi.Contracts.Persistence.Consumers;
+using CustomerWebApi.Contracts.Persistence.ICustomer;
 using CustomerWebApi.Helpers;
+using CustomerWebApi.Models;
 using CustomerWebApi.Persistence;
 using JwtAuthenticationManager;
 using MassTransit;
@@ -28,10 +30,22 @@ options     => options.UseNpgsql(configuration.GetConnectionString("CustomerDbCo
 
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<CustomerDetailsRequestConsumer>(); // Register the consumer
+                x.AddConsumer<CustomerConsumer>(); // Register the customer consumer for both add and edit
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("rabbitmq://localhost");
-                    cfg.ConfigureEndpoints(context);
+                    cfg.Host(new Uri("rabbitmq://localhost/"), h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                    // Request clients for customer update and create responses
+                    x.AddRequestClient<Customer>();
+                    cfg.ReceiveEndpoint("customer-service-queue", e =>
+                    {
+                        e.ConfigureConsumer<CustomerDetailsRequestConsumer>(context);
+                        e.ConfigureConsumer<CustomerConsumer>(context);
+                    });
                 });
             });
 

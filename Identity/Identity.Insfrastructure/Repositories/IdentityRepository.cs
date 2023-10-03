@@ -145,7 +145,7 @@ namespace Identity.Infrastructure.Repositories
                     IsSuperAdmin = false,
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
-                    UserName = model.FirstName + model.LastName
+                    UserName = model.FirstName + model.LastName,
                 };
 
                 // Salt and hash the password

@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CustomerWebApi\CustomerWebApi.csproj" />
     <ProjectReference Include="..\..\JwtAuthenticationManager\JwtAuthenticationManager.csproj" />
     <ProjectReference Include="..\..\Product\Product.Application\Product.Application.csproj" />
     <ProjectReference Include="..\..\RabbitMq\RabbitMq\RabbitMq.Services.csproj" />

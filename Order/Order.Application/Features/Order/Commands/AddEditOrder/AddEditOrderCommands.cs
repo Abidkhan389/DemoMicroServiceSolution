@@ -12,7 +12,9 @@ namespace Order.Application.Features.Order.Commands.AddEditOrder
     public class AddEditOrderCommands: IRequest<IResponse>
     {
         public string OrderId { get; set; }
-        public Guid CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; } = string.Empty;
+        public string CustomerPhone { get; set; }
         public DateTime OrderedOn { get; set; }
         public List<OrdersDetails> OrdersDetails { get; set; }
     }

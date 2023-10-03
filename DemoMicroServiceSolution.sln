@@ -53,7 +53,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMq.Services", "Rabbit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Migrations", "Order\Order.Migrations\Order.Migrations.csproj", "{3C82FEB6-DEC1-437C-B17D-1E018B4CA166}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "product.Migrations", "Product\product.Migrations\product.Migrations.csproj", "{A08632F3-95E8-4992-AD26-212CD060AC75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "product.Migrations", "Product\product.Migrations\product.Migrations.csproj", "{A08632F3-95E8-4992-AD26-212CD060AC75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E9C0D10-FA9A-400A-82F2-692CC03DFCED}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

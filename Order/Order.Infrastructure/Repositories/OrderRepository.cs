@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using CustomerWebApi.Features.Customers.Commands.AddEdit;
+using CustomerWebApi.Models;
+using MassTransit;
+using MassTransit.Transports;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Order.Application.Contracts.Persistance;
@@ -22,22 +26,30 @@ namespace Order.Infrastructure.Repositories
         private readonly OrderDbContext _context;
         private readonly IMapper _mapper;
         private readonly IResponse _response;
+        private readonly IRequestClient<Customer> _customerDetailsRequestClient;
 
-        public OrderRepository(OrderDbContext context, IMapper mapper, IResponse response)
+        public OrderRepository(OrderDbContext context, IMapper mapper, IResponse response, IRequestClient<Customer> _customerDetailsRequestClient)
         {
 
             this._context = context;
             this._mapper = mapper;
             this._response = response;
+            this._customerDetailsRequestClient = _customerDetailsRequestClient;
         }
 
         public async Task<IResponse> AddEditOrder(AddEditOrderCommands model)
         {
             if (model.OrderId == null)
             {
-                
-                    var order = _mapper.Map<Orders>(model);
-                var orderdetails = _mapper.Map<OrdersDetails>(model.OrdersDetails);
+                var Customer = new Customer
+                {
+                    CustomerName = model.CustomerName,
+                    Email = model.CustomerEmail,
+                    MobileNumber = model.CustomerPhone
+                };
+                var customerupdate = _customerDetailsRequestClient.GetResponse<Customer>(Customer);
+                var order = _mapper.Map<Orders>(model);
+                    var orderdetails = _mapper.Map<OrdersDetails>(model.OrdersDetails);
                     await _context.Orders.AddAsync(order);
                     await _context.OrdersDetails.AddAsync(orderdetails);
                     await _context.SaveChangesAsync();
@@ -52,6 +64,14 @@ namespace Order.Infrastructure.Repositories
                 var orderObj = await _context.Orders.FirstOrDefaultAsync(x => x.OrderId == model.OrderId);
                 if (orderObj != null)
                 {
+                    var Customer = new Customer
+                    {
+                        CustomerName=model.CustomerName,
+                        CustomerId=orderObj.CustomerId,
+                        Email=model.CustomerEmail,
+                        MobileNumber=model.CustomerPhone
+                    };
+                    var customerupdate = _customerDetailsRequestClient.GetResponse<Customer>(Customer);
                     // Customer customerobj= _mapper.Map<Customer>(model);
                     _context.Orders.Update(_mapper.Map<Orders>(model));
                     _context.OrdersDetails.Update(_mapper.Map<OrdersDetails>(model.OrdersDetails));
@@ -103,12 +123,15 @@ namespace Order.Infrastructure.Repositories
             if (orderObj != null)
             {
                // Use RabbitMQ to request customer information from the Customer microservice
-                //var customerInfo = await RequestCustomerInfoFromCustomerMicroservice(orderObj.CustomerId);
-                var customerViewModel = _mapper.Map<VM_Order>(orderObj);
-                //customerViewModel.customerInfo= customerInfo;
+                var customerInfo = await _customerDetailsRequestClient.GetResponse<Customer>(
+                new Customer { CustomerId = orderObj.CustomerId });
+
+                var OrdercustomerViewModel = _mapper.Map<VM_Order>(orderObj);
+                OrdercustomerViewModel.customerInfo= (CustomerInfo)customerInfo;
+
                 _response.Success = Constants.ResponseSuccess;
                 _response.Message = "Order found.";
-                _response.Data = orderObj;
+                _response.Data = OrdercustomerViewModel;
                 return _response;
             }
             else

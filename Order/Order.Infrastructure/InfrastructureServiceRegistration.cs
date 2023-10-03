@@ -1,4 +1,7 @@
-﻿using JwtAuthenticationManager;
+﻿using CustomerWebApi.Contracts.Persistence.Consumers;
+using CustomerWebApi.Features.Customers.Commands.AddEdit;
+using CustomerWebApi.Models;
+using JwtAuthenticationManager;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Order.Application.Contracts.Persistance;
 using Order.Infrastructure.Persistance;
 using Order.Infrastructure.Repositories;
+using RabbitMq.Services.Services2;
 using System.Reflection;
 
 namespace Order.Infrastructure
@@ -14,8 +18,7 @@ namespace Order.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContextPool<OrderDbContext>(
-            //options => options.UseNpgsql(configuration.GetConnectionString("OrderDbConnection")));
+            // Configure Entity Framework Core with Npgsql for PostgreSQL
             services.AddDbContextPool<OrderDbContext>(options =>
             {
                 options.UseNpgsql(
@@ -23,30 +26,45 @@ namespace Order.Infrastructure
                     sqlOptions => sqlOptions.MigrationsAssembly("Order.Migrations")
                 );
             });
-            // In your startup class or composition root
+
+            // Register repositories and other services
             services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<Order.Application.Helpers.IResponse, Order.Application.Helpers.Response>();
+
+            // Configure AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Configure JWT Authentication
             services.AddCustomJwtAuthentication();
+
+            // Configure MassTransit for messaging with RabbitMQ
             services.AddMassTransit(x =>
             {
-                // Configure MassTransit and RabbitMQ for the Order service.
+                x.AddConsumer<CustomerConsumer>(); // Register the customer consumer for both add and edit
+                x.AddConsumer<CustomerDetailsRequestConsumer>(); // Register the customer details request consumer
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(new Uri(configuration["RabbitMQ:Uri"]), h =>
+                    // Configure RabbitMQ host and credentials from your configuration
+                    cfg.Host(new Uri(configuration[BusConstants.RabbitMqUri]), h =>
                     {
-                        h.Username(configuration["RabbitMQ:UserName"]);
-                        h.Password(configuration["RabbitMQ:Password"]);
+                        h.Username(configuration[BusConstants.UserName]);
+                        h.Password(configuration[BusConstants.Password]);
+                    });
+                    // Request client for customer operations (both add and edit)
+                    x.AddRequestClient<Customer>();
+                    cfg.ReceiveEndpoint("order-service-queue", e =>
+                    {
+                        e.ConfigureConsumer<CustomerConsumer>(context);
+                        e.ConfigureConsumer<CustomerDetailsRequestConsumer>(context);
                     });
                 });
-                // Add consumers specific to the Order service.
-                //x.AddConsumer<OrderConsumer>();
             });
 
+            // Uncomment the line below if you want MassTransit to be hosted as a service
             services.AddMassTransitHostedService();
 
             return services;
-
         }
     }
 }

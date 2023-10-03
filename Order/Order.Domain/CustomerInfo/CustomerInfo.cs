@@ -8,10 +8,9 @@ namespace Order.Domain.CustomerInfo
 {
     public class CustomerInfo
     {
-        public int CustomerId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public Guid? CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public string MobileNumber { get; set; }
         public string Email { get; set; }
-        // Other customer-related properties
     }
 }

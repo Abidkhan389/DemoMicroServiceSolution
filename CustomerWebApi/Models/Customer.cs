@@ -11,7 +11,7 @@ namespace CustomerWebApi.Models
     public class Customer
     {
         [Key]
-        public Guid CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string MobileNumber { get; set; }
         public string Email { get; set; }

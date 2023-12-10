@@ -20,11 +20,11 @@ namespace CustomerWebApi.Contracts.Persistence.Consumers
                 var customer = context.Message;
                 var response = await _customerRepository.AddEditCustomer(new AddEditCommand
                 {
-                    CustomerId = customer.CustomerId!= null? customer.CustomerId:null, // Set the appropriate properties here
+                    CustomerId = customer.CustomerId,//!= null? customer.CustomerId:null, // Set the appropriate properties here
                     CustomerName = customer.CustomerName,
                     MobileNumber = customer.MobileNumber,
                     Email = customer.Email,
-                });
+                }) ;
                 if (response.Success)
                 {
                     // Log or process the success as needed

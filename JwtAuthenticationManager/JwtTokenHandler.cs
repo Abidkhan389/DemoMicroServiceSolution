@@ -32,7 +32,7 @@ namespace JwtAuthenticationManager
             /* Validation */
             //var userAccount= _UserAccountList.Where(x=> x.Email== authenticationRequest.Email && x.Password==authenticationRequest.pass).FirstOrDefault();
             //if (userAccount==null) return null;
-            var tokenExpiryTimeStamp= DateTime.UtcNow.AddMinutes(JWT_TOKEN_VALIDITY_MINS);
+            var tokenExpiryTimeStamp= DateTime.Now.AddMinutes(JWT_TOKEN_VALIDITY_MINS);
             var tokenkey= Encoding.ASCII.GetBytes(JWT_SECURITY_KEY);
             //var claimsIdentity = new ClaimsIdentity(new List<Claim>
             //{
